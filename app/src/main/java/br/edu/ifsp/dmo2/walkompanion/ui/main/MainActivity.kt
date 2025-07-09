@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkUser() {
         if(firebaseAuth.currentUser!=null){
-            launchHome()
+            launchApp()
         }
     }
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                     .signInWithEmailAndPassword(email, senha)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            launchHome()
+                            launchApp()
                         } else {
                             Toast.makeText(this, "Erro no Login", Toast.LENGTH_LONG).show()
                         }
