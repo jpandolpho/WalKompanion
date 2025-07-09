@@ -6,4 +6,7 @@
     <string name="btn_login">Login</string>
     <string name="txt_signup">Cadastre-se</string>
     <string name="hint_confirm">Confirme a senha.</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_history">Histórico</string>
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivityMainBinding
+import br.edu.ifsp.dmo2.walkompanion.ui.app.AppActivity
 import br.edu.ifsp.dmo2.walkompanion.ui.signup.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchApp() {
-        //startActivity(Intent(this, AppActivity::class.java))
+        startActivity(Intent(this, AppActivity::class.java))
         finish()
     }
 }
