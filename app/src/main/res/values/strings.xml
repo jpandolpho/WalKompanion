@@ -5,4 +5,5 @@
     <string name="hint_password">Senha</string>
     <string name="btn_login">Login</string>
     <string name="txt_signup">Cadastre-se</string>
+    <string name="hint_confirm">Confirme a senha.</string>
 </resources>

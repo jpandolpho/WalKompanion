@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivityMainBinding
+import br.edu.ifsp.dmo2.walkompanion.ui.signup.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUser() {
-        if(firebaseAuth.currentUser!=null){
+        if (firebaseAuth.currentUser != null) {
             launchApp()
         }
     }
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonLogin.setOnClickListener {
             val email = binding.textEmail.text.toString()
             val senha = binding.textSenha.text.toString()
-            if(email.isNotBlank() && senha.isNotBlank()) {
+            if (email.isNotBlank() && senha.isNotBlank()) {
                 firebaseAuth
                     .signInWithEmailAndPassword(email, senha)
                     .addOnCompleteListener { task ->
@@ -40,16 +41,16 @@ class MainActivity : AppCompatActivity() {
                             Toast.makeText(this, "Erro no Login", Toast.LENGTH_LONG).show()
                         }
                     }
-            }else{
+            } else {
                 Toast.makeText(this, "Erro no Login", Toast.LENGTH_LONG).show()
             }
         }
         binding.buttonSignup.setOnClickListener {
-            startActivity(Intent(this,SignUpActivity::class.java))
+            startActivity(Intent(this, SignUpActivity::class.java))
         }
     }
 
-    private fun launchApp(){
+    private fun launchApp() {
         startActivity(Intent(this, AppActivity::class.java))
         finish()
     }
