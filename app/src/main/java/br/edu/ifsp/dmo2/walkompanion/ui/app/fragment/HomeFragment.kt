@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
                 if (task.isSuccessful) {
                     val document = task.result
                     val name = document.data!!["nome"].toString()
-                    val txt = "${binding.txtWelcome.text}${name}!"
+                    val txt = "${binding.txtWelcome.text} ${name}!"
                     binding.txtWelcome.text = txt
                 }
             }

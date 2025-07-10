@@ -1,12 +1,11 @@
 package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import br.edu.ifsp.dmo2.walkompanion.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentProfileBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -35,17 +34,39 @@ class ProfileFragment : Fragment() {
                 if (task.isSuccessful) {
                     val document = task.result
                     val name = document.data!!["nome"].toString()
-                    val txt = "${binding.txtWelcome.text}${name}!"
-                    binding.txtWelcome.text = txt
+                    binding.txtName.text = name
                 }
             }
 
-        binding.buttonWalk.setOnClickListener {
-            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-            fragmentManager.beginTransaction()
-                .replace(R.id.container_fragment, WalkFragment())
-                .commit()
+        binding.buttonReset.setOnClickListener {
+            if (checkValues()) {
+                val senha = binding.textSenha.text.toString()
+                firebaseAuth.currentUser!!.updatePassword(senha)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                activity,
+                                "Senha alterada com sucesso!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Toast.makeText(activity, task.exception?.message, Toast.LENGTH_LONG)
+                                .show()
+                        }
+                    }
+            }
         }
+
+        binding.buttonLogout.setOnClickListener {
+            firebaseAuth.signOut()
+            requireActivity().finish()
+        }
+    }
+
+    private fun checkValues(): Boolean {
+        return !binding.textSenha.text.isNullOrBlank()
+                && !binding.textConfirm.text.isNullOrBlank()
+                && (binding.textSenha.text.toString() == binding.textConfirm.text.toString())
     }
 
     override fun onDestroyView() {
