@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.R
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivityAppBinding
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.HistoryFragment
 import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.HomeFragment
 import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.ProfileFragment
 

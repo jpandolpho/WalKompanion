@@ -3,18 +3,16 @@ package br.edu.ifsp.dmo2.walkompanion.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.ifsp.dmo2.walkompanion.R
+import br.edu.ifsp.dmo2.walkompanion.databinding.CaminhadaItemBinding
+import br.edu.ifsp.dmo2.walkompanion.listener.CaminhadaItemClickListener
 import br.edu.ifsp.dmo2.walkompanion.model.Caminhada
 
-class CaminhadaAdapter(private val caminhadas: Array<Caminhada>) :
+class CaminhadaAdapter(private val caminhadas: Array<Caminhada>, private val listener: CaminhadaItemClickListener) :
     RecyclerView.Adapter<CaminhadaAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val txtDate: TextView = view.findViewById(R.id.text_date)
-        val txtDuration: TextView = view.findViewById(R.id.text_time)
-        val txtSteps: TextView = view.findViewById(R.id.text_steps)
-        val txtDistance: TextView = view.findViewById(R.id.text_distance)
+        val binding: CaminhadaItemBinding = CaminhadaItemBinding.bind(view)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,9 +26,10 @@ class CaminhadaAdapter(private val caminhadas: Array<Caminhada>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.txtDate.text = caminhadas[position].getInicio().toString()
-        holder.txtDuration.text = caminhadas[position].getDuration().toString()
-        holder.txtSteps.text = caminhadas[position].getSteps().toString()
-        holder.txtDistance.text = caminhadas[position].getAproxDistance().toString()
+        holder.binding.textDate.text = caminhadas[position].getInicio().toString()
+        holder.binding.textTime.text = caminhadas[position].getDuration().toString()
+        holder.binding.textSteps.text = caminhadas[position].getSteps().toString()
+        holder.binding.textDistance.text = caminhadas[position].getAproxDistance().toString()
+        holder.binding.caminhadaLayout.setOnClickListener { listener.clickCaminhadaItem(position) }
     }
 }
