@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.R
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivityAppBinding
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.HomeFragment
 
 class AppActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAppBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAppBinding.inflate(layoutInflater)

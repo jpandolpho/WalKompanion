@@ -1,10 +1,13 @@
 package br.edu.ifsp.dmo2.walkompanion.ui.signup
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivitySignUpBinding
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -27,8 +30,17 @@ class SignUpActivity : AppCompatActivity() {
                     .createUserWithEmailAndPassword(email, senha)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            finish()
-                        } else {
+                            val name = binding.textName.text.toString()
+                            val db = Firebase.firestore
+                            val dados = hashMapOf(
+                                "nome" to name
+                            )
+                            db.collection("users").document(email)
+                                .set(dados)
+                                .addOnSuccessListener {
+                                    finish()
+                                }
+                           } else {
                             Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
                         }
                     }

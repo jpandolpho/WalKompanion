@@ -9,4 +9,7 @@
     <string name="nav_profile">Perfil</string>
     <string name="nav_home">Home</string>
     <string name="nav_history">Histórico</string>
+    <string name="text_welcome">Bem-vindo, </string>
+    <string name="btn_walk">Caminhar</string>
+    <string name="hint_name">Nome Completo</string>
 </resources>
