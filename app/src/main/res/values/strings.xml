@@ -17,4 +17,8 @@
     <string name="hint_new_password">Nova Senha</string>
     <string name="hint_confirm_new_pw">Confirme a nova senha</string>
     <string name="reset_password">Mudar Senha</string>
+    <string name="text_timestamp">Data e Hora</string>
+    <string name="text_duration">Duracao</string>
+    <string name="text_steps">Passos</string>
+    <string name="text_distance">Distancia</string>
 </resources>
