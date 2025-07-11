@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentWalkBinding
-import com.google.firebase.auth.FirebaseAuth
+import br.edu.ifsp.dmo2.walkompanion.ui.app.AppViewModel
 
 class WalkFragment : Fragment() {
     private lateinit var binding: FragmentWalkBinding
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val viewModel: AppViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +35,28 @@ class WalkFragment : Fragment() {
             binding.txtSteps.text = "Passos dados: "
             binding.txtDuration.text = "HH:MM:SS"
             binding.txtDistance.text = "Distancia percorrida: "
+        } else if (origin == "history") {
+            setupReview()
         }
+
+        binding.buttonFinish.setOnClickListener {
+            viewModel.finishWalk()
+            setupReview()
+            binding.txtDate.visibility = View.VISIBLE
+            binding.txtMaxh.visibility = View.VISIBLE
+            binding.txtMinh.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setupReview() {
+        binding.buttonFinish.visibility = View.GONE
+
+        binding.txtSteps.text = "Passos dados: "
+        binding.txtDuration.text = "HH:MM:SS"
+        binding.txtDistance.text = "Distancia percorrida: "
+        binding.txtDate.text = "data :)"
+        binding.txtMaxh.text = "1000"
+        binding.txtMinh.text = "-1000"
     }
 
     override fun onDestroyView() {

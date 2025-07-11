@@ -6,16 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import br.edu.ifsp.dmo2.walkompanion.R
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentHomeBinding
+import br.edu.ifsp.dmo2.walkompanion.ui.app.AppViewModel
 import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.walk.WalkFragment
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.firestore
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val viewModel: AppViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,29 +28,40 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val email = firebaseAuth.currentUser!!.email.toString()
-        val db = Firebase.firestore
-        db.collection("users").document(email).get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    val name = document.data!!["nome"].toString()
-                    val txt = "${binding.txtWelcome.text} ${name}!"
-                    binding.txtWelcome.text = txt
+        setupObserver()
+        viewModel.isWalking()
+    }
+
+    private fun moveToWalkFragment() {
+        val fragment = WalkFragment()
+        val bundle = Bundle()
+        bundle.putString("origin", "home")
+        fragment.arguments = bundle
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .replace(R.id.container_fragment, fragment)
+            .commit()
+    }
+
+    private fun setupObserver() {
+        viewModel.isWalking.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.buttonWalk.text = "Voltar para caminhada"
+                binding.buttonWalk.setOnClickListener {
+                    moveToWalkFragment()
+                }
+            } else {
+                binding.buttonWalk.text = "Caminhar"
+                binding.buttonWalk.setOnClickListener {
+                    viewModel.startWalk()
+                    moveToWalkFragment()
                 }
             }
+        })
 
-        binding.buttonWalk.setOnClickListener {
-            val fragment = WalkFragment()
-            val bundle = Bundle()
-            bundle.putBoolean("flag", true)
-            bundle.putString("origin", "home")
-            fragment.arguments = bundle
-            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-            fragmentManager.beginTransaction()
-                .replace(R.id.container_fragment, fragment)
-                .commit()
-        }
+        viewModel.nome.observe(viewLifecycleOwner, {
+            binding.txtWelcome.text = "${binding.txtWelcome.text} ${it}!"
+        })
     }
 
     override fun onDestroyView() {
