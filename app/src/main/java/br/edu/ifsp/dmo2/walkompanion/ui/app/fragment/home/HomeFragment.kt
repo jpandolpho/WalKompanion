@@ -1,4 +1,4 @@
-package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment
+package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import br.edu.ifsp.dmo2.walkompanion.R
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentHomeBinding
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.walk.WalkFragment
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore

@@ -1,4 +1,4 @@
-package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment
+package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater

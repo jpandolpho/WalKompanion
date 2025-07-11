@@ -1,4 +1,4 @@
-package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment
+package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.history
 
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +13,7 @@ import br.edu.ifsp.dmo2.walkompanion.adapter.CaminhadaAdapter
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentHistoryBinding
 import br.edu.ifsp.dmo2.walkompanion.listener.CaminhadaItemClickListener
 import br.edu.ifsp.dmo2.walkompanion.model.Caminhada
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.walk.WalkFragment
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -98,7 +99,7 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
         val fragment = WalkFragment()
         val bundle = Bundle()
         bundle.putString("email",firebaseAuth.currentUser!!.email.toString())
-        bundle.putString("timestamp", caminhadas[position].getInicio().toString())
+        bundle.putString("timestamp", caminhadas!![position].getInicio().toString())
         fragment.arguments = bundle
         val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()

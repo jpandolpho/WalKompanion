@@ -42,8 +42,12 @@ class CaminhadaAdapter(
 
         holder.binding.textSteps.text = "Passos dados: ${caminhadas[position].getSteps()}"
 
-        holder.binding.textDistance.text =
-            "Distância percorrida: ${"%.2f".format(caminhadas[position].getAproxDistance())}km"
+        val distanceStr =
+            if (caminhadas[position].getAproxDistance() < 1000)
+                "${caminhadas[position].getAproxDistance()}m"
+            else "${"%.2f".format(caminhadas[position].getAproxDistance()/1000)}km"
+
+        holder.binding.textDistance.text = "Distância percorrida: ${distanceStr}"
 
         holder.binding.caminhadaLayout.setOnClickListener { listener.clickCaminhadaItem(position) }
     }

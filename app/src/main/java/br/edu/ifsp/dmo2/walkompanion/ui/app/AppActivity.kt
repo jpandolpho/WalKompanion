@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.R
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivityAppBinding
-import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.HistoryFragment
-import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.HomeFragment
-import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.ProfileFragment
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.history.HistoryFragment
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.home.HomeFragment
+import br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.profile.ProfileFragment
 
 class AppActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAppBinding
