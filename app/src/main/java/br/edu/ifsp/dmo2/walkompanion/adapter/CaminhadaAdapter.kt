@@ -9,7 +9,10 @@ import br.edu.ifsp.dmo2.walkompanion.databinding.CaminhadaItemBinding
 import br.edu.ifsp.dmo2.walkompanion.listener.CaminhadaItemClickListener
 import br.edu.ifsp.dmo2.walkompanion.model.Caminhada
 
-class CaminhadaAdapter(private val caminhadas: Array<Caminhada>, private val listener: CaminhadaItemClickListener) :
+class CaminhadaAdapter(
+    private val caminhadas: Array<Caminhada>,
+    private val listener: CaminhadaItemClickListener
+) :
     RecyclerView.Adapter<CaminhadaAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: CaminhadaItemBinding = CaminhadaItemBinding.bind(view)
@@ -26,10 +29,22 @@ class CaminhadaAdapter(private val caminhadas: Array<Caminhada>, private val lis
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.textDate.text = caminhadas[position].getInicio().toString()
-        holder.binding.textTime.text = caminhadas[position].getDuration().toString()
-        holder.binding.textSteps.text = caminhadas[position].getSteps().toString()
-        holder.binding.textDistance.text = caminhadas[position].getAproxDistance().toString()
+        val date = caminhadas[position].getInicio().toDate()
+        val day = if (date.date < 10) "0${date.date}" else "${date.date}"
+        val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
+        val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
+        val dateStr = "${day}/${month}/${(date.year + 1900)} - ${(date.hours - 3)}:${minutes}"
+        holder.binding.textDate.text = dateStr
+
+        val duration = caminhadas[position].getDuration()
+        val durationStr = duration.inWholeMinutes.toString()
+        holder.binding.textTime.text = "Duração: ${durationStr}"
+
+        holder.binding.textSteps.text = "Passos dados: ${caminhadas[position].getSteps()}"
+
+        holder.binding.textDistance.text =
+            "Distância percorrida: ${"%.2f".format(caminhadas[position].getAproxDistance())}km"
+
         holder.binding.caminhadaLayout.setOnClickListener { listener.clickCaminhadaItem(position) }
     }
 }

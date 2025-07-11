@@ -61,10 +61,8 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
         query.get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.v("KEKW","task sucesseful!")
                     val document = task.result
                     if (!document.isEmpty) {
-                        Log.v("KEKW","not empty")
                         lastTimestamp = if (document.documents.size == 5)
                             document.documents.last().getTimestamp("inicio")
                         else
@@ -78,7 +76,7 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
                             document.data!!["duracao"].toString().toInt().seconds
                         val maxH = document.data!!["max_height"].toString().toFloat()
                         val minH = document.data!!["min_height"].toString().toFloat()
-                        val distance = (steps * 0.76).toFloat()
+                        val distance = (steps * 0.76 / 1000).toFloat()
                         val caminhada =
                             Caminhada(timestamp!!, steps, maxH, minH, duration, distance)
                         caminhadas!!.add(caminhada)
