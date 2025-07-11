@@ -42,9 +42,14 @@ class HomeFragment : Fragment() {
             }
 
         binding.buttonWalk.setOnClickListener {
+            val fragment = WalkFragment()
+            val bundle = Bundle()
+            bundle.putBoolean("flag", true)
+            bundle.putString("origin", "home")
+            fragment.arguments = bundle
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             fragmentManager.beginTransaction()
-                .replace(R.id.container_fragment, WalkFragment())
+                .replace(R.id.container_fragment, fragment)
                 .commit()
         }
     }

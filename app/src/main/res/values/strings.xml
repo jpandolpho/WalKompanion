@@ -23,4 +23,5 @@
     <string name="text_distance">Distancia</string>
     <string name="txt_history">Histórico</string>
     <string name="page_next">Carregar Mais</string>
+    <string name="finish_walk">Finalizar</string>
 </resources>

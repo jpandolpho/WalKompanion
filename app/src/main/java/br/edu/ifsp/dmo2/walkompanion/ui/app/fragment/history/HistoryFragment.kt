@@ -85,8 +85,8 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
                     adapter = CaminhadaAdapter(caminhadas!!.toTypedArray(), this)
                     binding.caminhadaList.layoutManager = LinearLayoutManager(requireContext())
                     binding.caminhadaList.adapter = adapter
-                }else{
-                    Log.v("KEKW",task.exception?.message.toString())
+                } else {
+                    Log.v("WALK", task.exception?.message.toString())
                 }
             }
     }
@@ -98,8 +98,9 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
     override fun clickCaminhadaItem(position: Int) {
         val fragment = WalkFragment()
         val bundle = Bundle()
-        bundle.putString("email",firebaseAuth.currentUser!!.email.toString())
+        bundle.putString("email", firebaseAuth.currentUser!!.email.toString())
         bundle.putString("timestamp", caminhadas!![position].getInicio().toString())
+        bundle.putString("origin", "history")
         fragment.arguments = bundle
         val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
