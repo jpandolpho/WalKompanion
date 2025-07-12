@@ -35,6 +35,7 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupAdapter(mutableListOf<Caminhada>().toTypedArray())
         setupObserver()
+        viewModel.resetList()
         viewModel.loadCaminhadas()
         binding.buttonMore.setOnClickListener {
             viewModel.loadCaminhadas()
@@ -42,19 +43,8 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
     }
 
     private fun setupObserver() {
-        viewModel.caminhadas.observe(viewLifecycleOwner,{
+        viewModel.caminhadas.observe(viewLifecycleOwner, {
             setupAdapter(it.toTypedArray())
-        })
-
-        viewModel.caminhada.observe(viewLifecycleOwner,{
-            val fragment = WalkFragment()
-            val bundle = Bundle()
-            bundle.putString("origin", "history")
-            fragment.arguments = bundle
-            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-            fragmentManager.beginTransaction()
-                .replace(R.id.container_fragment, fragment)
-                .commit()
         })
     }
 
@@ -70,5 +60,13 @@ class HistoryFragment : Fragment(), CaminhadaItemClickListener {
 
     override fun clickCaminhadaItem(position: Int) {
         viewModel.clickCaminhada(position)
+        val fragment = WalkFragment()
+        val bundle = Bundle()
+        bundle.putString("origin", "history")
+        fragment.arguments = bundle
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+            .replace(R.id.container_fragment, fragment)
+            .commit()
     }
 }

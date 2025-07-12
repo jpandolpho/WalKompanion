@@ -12,6 +12,7 @@ import br.edu.ifsp.dmo2.walkompanion.ui.app.AppViewModel
 class WalkFragment : Fragment() {
     private lateinit var binding: FragmentWalkBinding
     private val viewModel: AppViewModel by activityViewModels()
+    private lateinit var bundle: Bundle
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,8 +26,8 @@ class WalkFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        bundle = requireArguments()
         setupObserver()
-        val bundle: Bundle = requireArguments()
         val origin = bundle.getString("origin")
         if (origin == "home") {
             binding.txtDate.visibility = View.GONE
@@ -50,7 +51,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun setupObserver() {
-        viewModel.caminhada.observe(viewLifecycleOwner,{
+        viewModel.caminhada.observe(viewLifecycleOwner, {
             val caminhada = it
             val date = caminhada.getInicio().toDate()
             val day = if (date.date < 10) "0${date.date}" else "${date.date}"
@@ -68,12 +69,11 @@ class WalkFragment : Fragment() {
             val distanceStr =
                 if (caminhada.getAproxDistance() < 1000)
                     "${"%.2f".format(caminhada.getAproxDistance())}m"
-                else "${"%.2f".format(caminhada.getAproxDistance()/1000)}km"
+                else "${"%.2f".format(caminhada.getAproxDistance() / 1000)}km"
             binding.txtDistance.text = "Distância percorrida: ${distanceStr}"
 
-            //PRECISA TERMINAR ISSO AQUI!!!!!!!!!!!!!!!!!!!!!!!
-            binding.txtMaxh.text = "1000"
-            binding.txtMinh.text = "-1000"
+            binding.txtMaxh.text = "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
+            binding.txtMinh.text = "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
         })
     }
 

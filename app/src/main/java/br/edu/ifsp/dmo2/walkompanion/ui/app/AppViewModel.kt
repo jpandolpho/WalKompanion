@@ -19,6 +19,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private var lastTimestamp: Timestamp? = null
     private val db = Firebase.firestore
+    private var position: Int = -1
 
     private val _isWalking = MutableLiveData<Boolean>()
     val isWalking: LiveData<Boolean> = _isWalking
@@ -27,20 +28,20 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     val nome: LiveData<String> = _nome
 
     private val _caminhadas = MutableLiveData<ArrayList<Caminhada>>()
-    val caminhadas : LiveData<ArrayList<Caminhada>> = _caminhadas
+    val caminhadas: LiveData<ArrayList<Caminhada>> = _caminhadas
 
     private val _caminhada = MutableLiveData<Caminhada>()
-    val caminhada : LiveData<Caminhada> = _caminhada
+    val caminhada: LiveData<Caminhada> = _caminhada
 
-    fun isWalking(){
+    fun isWalking() {
         _isWalking.value = activeWalk
     }
 
-    fun startWalk(){
+    fun startWalk() {
         activeWalk = true
     }
 
-    fun finishWalk(){
+    fun finishWalk() {
         activeWalk = false
     }
 
@@ -87,10 +88,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun clickCaminhada(position: Int) {
-        _caminhada.value = _caminhadas.value!![position]
+        this.position = position
     }
 
     fun showData() {
-        _caminhada.value = _caminhada.value
+        _caminhada.value = _caminhadas.value!![position]
+    }
+
+    fun resetList() {
+        lastTimestamp = null
     }
 }
