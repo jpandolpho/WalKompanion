@@ -45,50 +45,69 @@ class WalkFragment : Fragment() {
             binding.txtDuration.visibility = View.GONE
 
             binding.txtSteps.text = "Passos dados: ${viewModel.steps}"
-            binding.txtDistance.text = "Distancia percorrida: "
+            binding.txtDistance.text = "Distancia percorrida: 0.00m"
         } else if (origin == "history") {
             setupReview()
         }
 
         binding.buttonFinish.setOnClickListener {
             cronometro.stop()
+            viewModel.saveTime(cronometro.base)
             viewModel.finishWalk()
             setupReview()
             binding.txtDate.visibility = View.VISIBLE
             binding.txtMaxh.visibility = View.VISIBLE
             binding.txtMinh.visibility = View.VISIBLE
         }
+
+        binding.buttonTest.setOnClickListener {
+            viewModel.addStep()
+            viewModel.updateStepView()
+        }
     }
 
     private fun setupObserver() {
-        viewModel.caminhada.observe(viewLifecycleOwner, {
-            val caminhada = it
-            val date = caminhada.getInicio().toDate()
-            val day = if (date.date < 10) "0${date.date}" else "${date.date}"
-            val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
-            val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
-            val dateStr = "${day}/${month}/${(date.year + 1900)} - ${(date.hours - 3)}:${minutes}"
-            binding.txtDate.text = dateStr
+        val origin = bundle.getString("origin")
+        if(origin == "home"){
+            viewModel.atualizarPassos.observe(viewLifecycleOwner, {
+                binding.txtSteps.text = "Passos dados: ${viewModel.steps}"
+                val caminhada = viewModel.steps * 0.76
+                val distanceStr =
+                    if (caminhada < 1000)
+                        "${"%.2f".format(caminhada)}m"
+                    else "${"%.2f".format((caminhada/1000))}km"
+                binding.txtDistance.text = "Distancia percorrida: ${distanceStr}"
+            })
+        }
+        if(origin == "history") {
+            viewModel.caminhada.observe(viewLifecycleOwner, {
+                val caminhada = it
+                val date = caminhada.getInicio().toDate()
+                val day = if (date.date < 10) "0${date.date}" else "${date.date}"
+                val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
+                val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
+                val dateStr =
+                    "${day}/${month}/${(date.year + 1900)} - ${(date.hours - 3)}:${minutes}"
+                binding.txtDate.text = dateStr
 
-            val duration = caminhada.getDuration()
-            val durationStr = duration.inWholeMinutes.toString()
-            binding.txtDuration.text = "Duração: ${durationStr}"
+                val duration = caminhada.getDuration()
+                val durationStr = duration.inWholeMinutes.toString()
+                binding.txtDuration.text = "Duração: ${durationStr}"
 
-            binding.txtSteps.text = "Passos dados: ${caminhada.getSteps()}"
+                binding.txtSteps.text = "Passos dados: ${caminhada.getSteps()}"
 
-            val distanceStr =
-                if (caminhada.getAproxDistance() < 1000)
-                    "${"%.2f".format(caminhada.getAproxDistance())}m"
-                else "${"%.2f".format(caminhada.getAproxDistance() / 1000)}km"
-            binding.txtDistance.text = "Distância percorrida: ${distanceStr}"
+                val distanceStr =
+                    if (caminhada.getAproxDistance() < 1000)
+                        "${"%.2f".format(caminhada.getAproxDistance())}m"
+                    else "${"%.2f".format(caminhada.getAproxDistance() / 1000)}km"
+                binding.txtDistance.text = "Distância percorrida: ${distanceStr}"
 
-            binding.txtMaxh.text = "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
-            binding.txtMinh.text = "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
-        })
-
-        viewModel.atualizarPassos.observe(viewLifecycleOwner, {
-            binding.txtSteps.text = "Passos dados: ${viewModel.steps}"
-        })
+                binding.txtMaxh.text =
+                    "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
+                binding.txtMinh.text =
+                    "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
+            })
+        }
     }
 
     private fun setupReview() {

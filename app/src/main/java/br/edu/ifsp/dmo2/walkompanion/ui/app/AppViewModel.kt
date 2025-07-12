@@ -1,7 +1,6 @@
 package br.edu.ifsp.dmo2.walkompanion.ui.app
 
 import android.app.Application
-import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
