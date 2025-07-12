@@ -1,9 +1,11 @@
 package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.walk
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Chronometer
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentWalkBinding
@@ -13,6 +15,7 @@ class WalkFragment : Fragment() {
     private lateinit var binding: FragmentWalkBinding
     private val viewModel: AppViewModel by activityViewModels()
     private lateinit var bundle: Bundle
+    private lateinit var cronometro : Chronometer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,21 +30,28 @@ class WalkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bundle = requireArguments()
+        cronometro = binding.chronometer
         setupObserver()
         val origin = bundle.getString("origin")
         if (origin == "home") {
+            if(bundle.getBoolean("started"))
+                cronometro.base = viewModel.elapsedTime
+            else
+                cronometro.base = SystemClock.elapsedRealtime()
+            cronometro.start()
             binding.txtDate.visibility = View.GONE
             binding.txtMaxh.visibility = View.GONE
             binding.txtMinh.visibility = View.GONE
+            binding.txtDuration.visibility = View.GONE
 
-            binding.txtSteps.text = "Passos dados: "
-            binding.txtDuration.text = "HH:MM:SS"
+            binding.txtSteps.text = "Passos dados: ${viewModel.steps}"
             binding.txtDistance.text = "Distancia percorrida: "
         } else if (origin == "history") {
             setupReview()
         }
 
         binding.buttonFinish.setOnClickListener {
+            cronometro.stop()
             viewModel.finishWalk()
             setupReview()
             binding.txtDate.visibility = View.VISIBLE
@@ -75,14 +85,20 @@ class WalkFragment : Fragment() {
             binding.txtMaxh.text = "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
             binding.txtMinh.text = "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
         })
+
+        viewModel.atualizarPassos.observe(viewLifecycleOwner, {
+            binding.txtSteps.text = "Passos dados: ${viewModel.steps}"
+        })
     }
 
     private fun setupReview() {
         binding.buttonFinish.visibility = View.GONE
+        binding.chronometer.visibility = View.GONE
         viewModel.showData()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        viewModel.saveTime(cronometro.base)
     }
 }

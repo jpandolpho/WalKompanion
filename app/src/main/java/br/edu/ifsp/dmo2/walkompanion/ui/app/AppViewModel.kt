@@ -1,6 +1,7 @@
 package br.edu.ifsp.dmo2.walkompanion.ui.app
 
 import android.app.Application
+import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -20,6 +21,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private var lastTimestamp: Timestamp? = null
     private val db = Firebase.firestore
     private var position: Int = -1
+    var steps: Int = 0
+        private set
+    var maxH: Float? = null
+        private set
+    var minH: Float? = null
+        private set
+    var elapsedTime : Long = 0
+        private set
 
     private val _isWalking = MutableLiveData<Boolean>()
     val isWalking: LiveData<Boolean> = _isWalking
@@ -33,12 +42,20 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val _caminhada = MutableLiveData<Caminhada>()
     val caminhada: LiveData<Caminhada> = _caminhada
 
+    private val _ligarSensores = MutableLiveData<Boolean>()
+    val ligarSensores: LiveData<Boolean> = _ligarSensores
+
+    private val _atualizarPassos = MutableLiveData<Boolean>()
+    val atualizarPassos: LiveData<Boolean> = _atualizarPassos
+
     fun isWalking() {
         _isWalking.value = activeWalk
     }
 
     fun startWalk() {
         activeWalk = true
+        steps = 0
+        _ligarSensores.value = true
     }
 
     fun finishWalk() {
@@ -97,5 +114,27 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun resetList() {
         lastTimestamp = null
+    }
+
+    fun addStep() {
+        steps+=1
+    }
+
+    fun updateHeights(altura: Float) {
+        if(maxH==null && minH==null){
+            maxH=altura
+            minH=altura
+        }else{
+            if(maxH!! < altura) maxH = altura
+            if(minH!! > altura) minH = altura
+        }
+    }
+
+    fun saveTime(base: Long) {
+        elapsedTime = base
+    }
+
+    fun updateStepView() {
+        _atualizarPassos.value = true
     }
 }

@@ -32,10 +32,8 @@ class HomeFragment : Fragment() {
         viewModel.isWalking()
     }
 
-    private fun moveToWalkFragment() {
+    private fun moveToWalkFragment(bundle: Bundle) {
         val fragment = WalkFragment()
-        val bundle = Bundle()
-        bundle.putString("origin", "home")
         fragment.arguments = bundle
         val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
@@ -45,16 +43,20 @@ class HomeFragment : Fragment() {
 
     private fun setupObserver() {
         viewModel.isWalking.observe(viewLifecycleOwner, {
+            val bundle = Bundle()
+            bundle.putString("origin", "home")
             if (it) {
                 binding.buttonWalk.text = "Voltar para caminhada"
                 binding.buttonWalk.setOnClickListener {
-                    moveToWalkFragment()
+                    bundle.putBoolean("started", true)
+                    moveToWalkFragment(bundle)
                 }
             } else {
                 binding.buttonWalk.text = "Caminhar"
                 binding.buttonWalk.setOnClickListener {
                     viewModel.startWalk()
-                    moveToWalkFragment()
+                    bundle.putBoolean("started", false)
+                    moveToWalkFragment(bundle)
                 }
             }
         })
