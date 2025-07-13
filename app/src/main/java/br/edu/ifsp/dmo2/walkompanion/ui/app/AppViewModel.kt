@@ -13,13 +13,18 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     private var activeWalk = false
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private var timestampInicio: Timestamp? = null
     private var lastTimestamp: Timestamp? = null
     private val db = Firebase.firestore
     private var position: Int = -1
+    var startingTime : Long = 0
+        private set
     var steps: Int = 0
         private set
     var maxH: Float? = null
@@ -47,6 +52,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val _atualizarPassos = MutableLiveData<Boolean>()
     val atualizarPassos: LiveData<Boolean> = _atualizarPassos
 
+    private val _finalizarCaminhada = MutableLiveData<Caminhada>()
+    val finalizarCaminhada: LiveData<Caminhada> = _finalizarCaminhada
+
     fun isWalking() {
         _isWalking.value = activeWalk
     }
@@ -54,11 +62,34 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun startWalk() {
         activeWalk = true
         steps = 0
+        timestampInicio = Timestamp.now()
         _ligarSensores.value = true
     }
 
     fun finishWalk() {
         activeWalk = false
+        Log.v("KEKW", elapsedTime.toString())
+        Log.v("KEKW", startingTime.toString())
+        val duration = (elapsedTime - startingTime).toDuration(DurationUnit.MILLISECONDS)
+        Log.v("KEKW",duration.toInt(DurationUnit.SECONDS).toString())
+        val email = firebaseAuth.currentUser!!.email.toString()
+        val steps = this.steps
+        val maxH : Float = if(this.maxH == null) 0F else this.maxH!!
+        val minH : Float = if(this.minH == null) 0f else this.minH!!
+        val data = timestampInicio!!
+        val dados = hashMapOf(
+            "duracao" to duration.inWholeSeconds,
+            "inicio" to data,
+            "max_height" to maxH,
+            "min_height" to minH,
+            "owner" to email,
+            "passos" to steps
+        )
+        db.collection("caminhadas").document()
+            .set(dados)
+            .addOnSuccessListener {
+                _finalizarCaminhada.value = Caminhada(data,steps,maxH,minH,duration,(steps*0.76f))
+            }
     }
 
     fun storeName(name: String) {
@@ -91,7 +122,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                             document.data!!["duracao"].toString().toInt().seconds
                         val maxH = document.data!!["max_height"].toString().toFloat()
                         val minH = document.data!!["min_height"].toString().toFloat()
-                        val distance = (steps * 0.76 / 1000).toFloat()
+                        val distance = (steps * 0.76).toFloat()
                         val caminhada =
                             Caminhada(timestamp!!, steps, maxH, minH, duration, distance)
                         lista.add(caminhada)
@@ -135,5 +166,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateStepView() {
         _atualizarPassos.value = true
+    }
+
+    fun startTime(base: Long) {
+        startingTime = base
     }
 }

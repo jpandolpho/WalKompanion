@@ -33,7 +33,9 @@ class CaminhadaAdapter(
         val day = if (date.date < 10) "0${date.date}" else "${date.date}"
         val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
         val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
-        val dateStr = "${day}/${month}/${(date.year + 1900)} - ${(date.hours - 3)}:${minutes}"
+        val horas = if ((date.hours - 3) < 0 ) date.hours+24-3 else date.hours-3
+        val dateStr =
+            "${day}/${month}/${(date.year + 1900)} - ${horas}:${minutes}"
         holder.binding.textDate.text = dateStr
 
         val duration = caminhadas[position].getDuration()

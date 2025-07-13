@@ -9,6 +9,7 @@ import android.widget.Chronometer
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import br.edu.ifsp.dmo2.walkompanion.databinding.FragmentWalkBinding
+import br.edu.ifsp.dmo2.walkompanion.model.Caminhada
 import br.edu.ifsp.dmo2.walkompanion.ui.app.AppViewModel
 
 class WalkFragment : Fragment() {
@@ -36,8 +37,10 @@ class WalkFragment : Fragment() {
         if (origin == "home") {
             if(bundle.getBoolean("started"))
                 cronometro.base = viewModel.elapsedTime
-            else
+            else {
                 cronometro.base = SystemClock.elapsedRealtime()
+                viewModel.startTime(cronometro.base)
+            }
             cronometro.start()
             binding.txtDate.visibility = View.GONE
             binding.txtMaxh.visibility = View.GONE
@@ -52,9 +55,11 @@ class WalkFragment : Fragment() {
 
         binding.buttonFinish.setOnClickListener {
             cronometro.stop()
-            viewModel.saveTime(cronometro.base)
+            viewModel.saveTime(SystemClock.elapsedRealtime())
+            bundle.putString("origin", "finalized")
             viewModel.finishWalk()
-            setupReview()
+            binding.buttonFinish.visibility = View.GONE
+            binding.chronometer.visibility = View.GONE
             binding.txtDate.visibility = View.VISIBLE
             binding.txtMaxh.visibility = View.VISIBLE
             binding.txtMinh.visibility = View.VISIBLE
@@ -82,32 +87,45 @@ class WalkFragment : Fragment() {
         if(origin == "history") {
             viewModel.caminhada.observe(viewLifecycleOwner, {
                 val caminhada = it
-                val date = caminhada.getInicio().toDate()
-                val day = if (date.date < 10) "0${date.date}" else "${date.date}"
-                val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
-                val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
-                val dateStr =
-                    "${day}/${month}/${(date.year + 1900)} - ${(date.hours - 3)}:${minutes}"
-                binding.txtDate.text = dateStr
-
-                val duration = caminhada.getDuration()
-                val durationStr = duration.inWholeMinutes.toString()
-                binding.txtDuration.text = "Duração: ${durationStr}"
-
-                binding.txtSteps.text = "Passos dados: ${caminhada.getSteps()}"
-
-                val distanceStr =
-                    if (caminhada.getAproxDistance() < 1000)
-                        "${"%.2f".format(caminhada.getAproxDistance())}m"
-                    else "${"%.2f".format(caminhada.getAproxDistance() / 1000)}km"
-                binding.txtDistance.text = "Distância percorrida: ${distanceStr}"
-
-                binding.txtMaxh.text =
-                    "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
-                binding.txtMinh.text =
-                    "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
+                formatData(caminhada!!)
             })
         }
+        if(origin == "finalized"){
+            viewModel.finalizarCaminhada.observe(viewLifecycleOwner,{
+                val caminhada = it
+                formatData(caminhada)
+            })
+        }
+    }
+
+    private fun formatData(caminhada: Caminhada) {
+        //DESCOBRIR PORQUE AS COISAS NÃO ESTÃO SENDO EXIBIDAS CORRETAMENTE AO FINALIZAR UMA CAMINHADA
+        val date = caminhada.getInicio().toDate()
+        val day = if (date.date < 10) "0${date.date}" else "${date.date}"
+        val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
+        val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
+        val horas = if ((date.hours - 3) < 0 ) date.hours+24-3 else date.hours-3
+        val dateStr =
+            "${day}/${month}/${(date.year + 1900)} - ${horas}:${minutes}"
+        binding.txtDate.text = dateStr
+
+        val duration = caminhada.getDuration()
+        val durationStr = duration.inWholeMinutes.toString()
+        binding.txtDuration.text = "Duração: ${durationStr}"
+
+        binding.txtSteps.text = "Passos dados: ${caminhada.getSteps()}"
+
+        val distanceStr =
+            if (caminhada.getAproxDistance() < 1000)
+                "${"%.2f".format(caminhada.getAproxDistance())}m"
+            else "${"%.2f".format(caminhada.getAproxDistance() / 1000)}km"
+        binding.txtDistance.text = "Distância percorrida: ${distanceStr}"
+
+        //ARRUMAR VISUALIZAÇÃO DESTES VALORES
+        binding.txtMaxh.text =
+            "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
+        binding.txtMinh.text =
+            "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
     }
 
     private fun setupReview() {
