@@ -25,7 +25,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private var position: Int = -1
     var startingTime: Long = 0
         private set
-    var steps: Int = 0
+    var steps: Int = -1
         private set
     var maxH: Float? = null
         private set
@@ -61,7 +61,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun startWalk() {
         activeWalk = true
-        steps = 0
+        steps = -1
         timestampInicio = Timestamp.now()
         _ligarSensores.value = true
     }
