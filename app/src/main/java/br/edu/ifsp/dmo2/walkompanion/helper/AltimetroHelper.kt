@@ -17,8 +17,10 @@ class AltimetroHelper(
 
     fun start() {
         pressureSensor?.let {
-            sensorManager.registerListener(this, it,
-                SensorManager.SENSOR_DELAY_UI)
+            sensorManager.registerListener(
+                this, it,
+                SensorManager.SENSOR_DELAY_UI
+            )
         }
     }
 
@@ -37,8 +39,10 @@ class AltimetroHelper(
                 pressaoBase = pressaoAtual
                 callback.onAlturaAtualizada(0f)
             } else {
-                val alturaRelativa = SensorManager.getAltitude(pressaoBase!!,
-                    pressaoAtual)
+                val alturaRelativa = SensorManager.getAltitude(
+                    pressaoBase!!,
+                    pressaoAtual
+                )
                 callback.onAlturaAtualizada(alturaRelativa)
             }
         }

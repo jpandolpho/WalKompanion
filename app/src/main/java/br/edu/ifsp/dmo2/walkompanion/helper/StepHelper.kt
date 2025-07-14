@@ -12,20 +12,20 @@ class StepHelper(
 ) : SensorEventListener {
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+    private val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
-    fun start(){
-        sensor?.let{
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_FASTEST)
+    fun start() {
+        sensor?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
         }
     }
 
-    fun finish(){
+    fun finish() {
         sensorManager.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        event?.let{
+        event?.let {
             callback.onStepDetectado()
         }
     }

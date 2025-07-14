@@ -16,7 +16,7 @@ class WalkFragment : Fragment() {
     private lateinit var binding: FragmentWalkBinding
     private val viewModel: AppViewModel by activityViewModels()
     private lateinit var bundle: Bundle
-    private lateinit var cronometro : Chronometer
+    private lateinit var cronometro: Chronometer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +35,7 @@ class WalkFragment : Fragment() {
         setupObserver()
         val origin = bundle.getString("origin")
         if (origin == "home") {
-            if(bundle.getBoolean("started"))
+            if (bundle.getBoolean("started"))
                 cronometro.base = viewModel.elapsedTime
             else {
                 cronometro.base = SystemClock.elapsedRealtime()
@@ -56,10 +56,10 @@ class WalkFragment : Fragment() {
         binding.buttonFinish.setOnClickListener {
             cronometro.stop()
             viewModel.saveTime(SystemClock.elapsedRealtime())
-            bundle.putString("origin", "finalized")
             viewModel.finishWalk()
             binding.buttonFinish.visibility = View.GONE
             binding.chronometer.visibility = View.GONE
+            binding.txtDuration.visibility = View.VISIBLE
             binding.txtDate.visibility = View.VISIBLE
             binding.txtMaxh.visibility = View.VISIBLE
             binding.txtMinh.visibility = View.VISIBLE
@@ -73,40 +73,36 @@ class WalkFragment : Fragment() {
 
     private fun setupObserver() {
         val origin = bundle.getString("origin")
-        if(origin == "home"){
+        if (origin == "home") {
             viewModel.atualizarPassos.observe(viewLifecycleOwner, {
                 binding.txtSteps.text = "Passos dados: ${viewModel.steps}"
                 val caminhada = viewModel.steps * 0.76
                 val distanceStr =
                     if (caminhada < 1000)
                         "${"%.2f".format(caminhada)}m"
-                    else "${"%.2f".format((caminhada/1000))}km"
+                    else "${"%.2f".format((caminhada / 1000))}km"
                 binding.txtDistance.text = "Distancia percorrida: ${distanceStr}"
             })
         }
-        if(origin == "history") {
+        if (origin == "history") {
             viewModel.caminhada.observe(viewLifecycleOwner, {
                 val caminhada = it
                 formatData(caminhada!!)
             })
         }
-        if(origin == "finalized"){
-            viewModel.finalizarCaminhada.observe(viewLifecycleOwner,{
-                val caminhada = it
-                formatData(caminhada)
-            })
-        }
+        viewModel.finalizarCaminhada.observe(viewLifecycleOwner, {
+            val caminhada = it
+            formatData(caminhada)
+        })
     }
 
     private fun formatData(caminhada: Caminhada) {
-        //DESCOBRIR PORQUE AS COISAS NÃO ESTÃO SENDO EXIBIDAS CORRETAMENTE AO FINALIZAR UMA CAMINHADA
         val date = caminhada.getInicio().toDate()
         val day = if (date.date < 10) "0${date.date}" else "${date.date}"
         val month = if ((date.month + 1) < 10) "0${date.month + 1}" else "${date.month + 1}"
         val minutes = if (date.minutes < 10) "0${date.minutes}" else "${date.minutes}"
-        val horas = if ((date.hours - 3) < 0 ) date.hours+24-3 else date.hours-3
         val dateStr =
-            "${day}/${month}/${(date.year + 1900)} - ${horas}:${minutes}"
+            "${day}/${month}/${(date.year + 1900)} - ${date.hours}:${minutes}"
         binding.txtDate.text = dateStr
 
         val duration = caminhada.getDuration()
@@ -118,14 +114,22 @@ class WalkFragment : Fragment() {
         val distanceStr =
             if (caminhada.getAproxDistance() < 1000)
                 "${"%.2f".format(caminhada.getAproxDistance())}m"
-            else "${"%.2f".format(caminhada.getAproxDistance() / 1000)}km"
+            else "${"%.2f".format((caminhada.getAproxDistance() / 1000))}km"
         binding.txtDistance.text = "Distância percorrida: ${distanceStr}"
 
-        //ARRUMAR VISUALIZAÇÃO DESTES VALORES
+        val maxHStr =
+            if (caminhada.getMaxHeight() < 1000)
+                "${"%.2f".format(caminhada.getMaxHeight())}m"
+            else "${"%.2f".format((caminhada.getMaxHeight() / 1000))}km"
         binding.txtMaxh.text =
-            "Altitude máxima: ${"%.2f".format(caminhada.getMaxHeight())}m"
+            "Altitude máxima: ${maxHStr}"
+
+        val minHStr =
+            if (caminhada.getMinHeight() < 1000)
+                "${"%.2f".format(caminhada.getMinHeight())}m"
+            else "${"%.2f".format((caminhada.getMinHeight() / 1000))}km"
         binding.txtMinh.text =
-            "Altitude mínima: ${"%.2f".format(caminhada.getMinHeight())}m"
+            "Altitude mínima: ${minHStr}"
     }
 
     private fun setupReview() {

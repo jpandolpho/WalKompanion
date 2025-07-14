@@ -27,7 +27,7 @@ class AppActivity : AppCompatActivity(), StepHelper.CallbackStep, AltimetroHelpe
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-        stepHelper = StepHelper(this,  this)
+        stepHelper = StepHelper(this, this)
         heightHelper = AltimetroHelper(this, this)
 
         setupObservers()
@@ -76,10 +76,14 @@ class AppActivity : AppCompatActivity(), StepHelper.CallbackStep, AltimetroHelpe
     }
 
     private fun setupObservers() {
-        viewModel.ligarSensores.observe(this,{
+        viewModel.ligarSensores.observe(this, {
             stepHelper.start()
             heightHelper.zerarAltura()
             heightHelper.start()
+        })
+        viewModel.finalizarCaminhada.observe(this, {
+            stepHelper.finish()
+            heightHelper.finish()
         })
     }
 

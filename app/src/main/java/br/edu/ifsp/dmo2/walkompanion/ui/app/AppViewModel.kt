@@ -23,7 +23,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private var lastTimestamp: Timestamp? = null
     private val db = Firebase.firestore
     private var position: Int = -1
-    var startingTime : Long = 0
+    var startingTime: Long = 0
         private set
     var steps: Int = 0
         private set
@@ -31,7 +31,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var minH: Float? = null
         private set
-    var elapsedTime : Long = 0
+    var elapsedTime: Long = 0
         private set
 
     private val _isWalking = MutableLiveData<Boolean>()
@@ -68,14 +68,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun finishWalk() {
         activeWalk = false
-        Log.v("KEKW", elapsedTime.toString())
-        Log.v("KEKW", startingTime.toString())
         val duration = (elapsedTime - startingTime).toDuration(DurationUnit.MILLISECONDS)
-        Log.v("KEKW",duration.toInt(DurationUnit.SECONDS).toString())
         val email = firebaseAuth.currentUser!!.email.toString()
         val steps = this.steps
-        val maxH : Float = if(this.maxH == null) 0F else this.maxH!!
-        val minH : Float = if(this.minH == null) 0f else this.minH!!
+        val maxH: Float = if (this.maxH == null) 0F else this.maxH!!
+        val minH: Float = if (this.minH == null) 0f else this.minH!!
         val data = timestampInicio!!
         val dados = hashMapOf(
             "duracao" to duration.inWholeSeconds,
@@ -88,7 +85,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         db.collection("caminhadas").document()
             .set(dados)
             .addOnSuccessListener {
-                _finalizarCaminhada.value = Caminhada(data,steps,maxH,minH,duration,(steps*0.76f))
+                _finalizarCaminhada.value =
+                    Caminhada(data, steps, maxH, minH, duration, (steps * 0.76f))
             }
     }
 
@@ -147,16 +145,16 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addStep() {
-        steps+=1
+        steps += 1
     }
 
     fun updateHeights(altura: Float) {
-        if(maxH==null && minH==null){
-            maxH=altura
-            minH=altura
-        }else{
-            if(maxH!! < altura) maxH = altura
-            if(minH!! > altura) minH = altura
+        if (maxH == null && minH == null) {
+            maxH = altura
+            minH = altura
+        } else {
+            if (maxH!! < altura) maxH = altura
+            if (minH!! > altura) minH = altura
         }
     }
 
