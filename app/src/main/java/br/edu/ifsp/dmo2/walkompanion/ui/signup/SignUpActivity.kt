@@ -1,7 +1,6 @@
 package br.edu.ifsp.dmo2.walkompanion.ui.signup
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.dmo2.walkompanion.databinding.ActivitySignUpBinding
@@ -40,7 +39,7 @@ class SignUpActivity : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     finish()
                                 }
-                           } else {
+                        } else {
                             Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
                         }
                     }

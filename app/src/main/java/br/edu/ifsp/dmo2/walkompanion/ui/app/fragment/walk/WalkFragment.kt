@@ -59,6 +59,7 @@ class WalkFragment : Fragment() {
             viewModel.finishWalk()
             binding.buttonFinish.visibility = View.GONE
             binding.chronometer.visibility = View.GONE
+            binding.buttonTest.visibility = View.GONE
             binding.txtDuration.visibility = View.VISIBLE
             binding.txtDate.visibility = View.VISIBLE
             binding.txtMaxh.visibility = View.VISIBLE
@@ -135,6 +136,7 @@ class WalkFragment : Fragment() {
     private fun setupReview() {
         binding.buttonFinish.visibility = View.GONE
         binding.chronometer.visibility = View.GONE
+        binding.buttonTest.visibility = View.GONE
         viewModel.showData()
     }
 
