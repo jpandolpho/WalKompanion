@@ -60,16 +60,10 @@ class WalkFragment : Fragment() {
             viewModel.finishWalk()
             binding.buttonFinish.visibility = View.GONE
             binding.chronometer.visibility = View.GONE
-            binding.buttonTest.visibility = View.GONE
             binding.txtDuration.visibility = View.VISIBLE
             binding.txtDate.visibility = View.VISIBLE
             binding.txtMaxh.visibility = View.VISIBLE
             binding.txtMinh.visibility = View.VISIBLE
-        }
-
-        binding.buttonTest.setOnClickListener {
-            viewModel.addStep()
-            viewModel.updateStepView()
         }
     }
 
@@ -145,7 +139,6 @@ class WalkFragment : Fragment() {
     private fun setupReview() {
         binding.buttonFinish.visibility = View.GONE
         binding.chronometer.visibility = View.GONE
-        binding.buttonTest.visibility = View.GONE
         viewModel.showData()
     }
 
