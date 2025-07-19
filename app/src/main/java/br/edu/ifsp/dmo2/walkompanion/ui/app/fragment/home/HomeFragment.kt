@@ -42,14 +42,18 @@ class HomeFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun moveToWalkFragment(bundle: Bundle) {
-        if((ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACTIVITY_RECOGNITION)!= PackageManager.PERMISSION_GRANTED)) {
+        if ((ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACTIVITY_RECOGNITION
+            ) != PackageManager.PERMISSION_GRANTED)
+        ) {
             requestPermissions(
                 arrayOf(
                     Manifest.permission.ACTIVITY_RECOGNITION,
                     Manifest.permission.FOREGROUND_SERVICE
                 ), permissionRequestCode
             )
-        }else {
+        } else {
             val fragment = WalkFragment()
             fragment.arguments = bundle
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager

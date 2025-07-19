@@ -2,7 +2,6 @@ package br.edu.ifsp.dmo2.walkompanion.ui.app.fragment.walk
 
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +68,6 @@ class WalkFragment : Fragment() {
 
     private fun setupObserver() {
         val origin = bundle.getString("origin")
-        Log.v("KEKW",origin.toString())
         if (origin == "home") {
             viewModel.finalizarCaminhada.observe(viewLifecycleOwner, {
                 val caminhada = it
@@ -101,14 +99,13 @@ class WalkFragment : Fragment() {
         val dateStr =
             "${day}/${month}/${(date.year + 1900)} - ${date.hours}:${minutes}"
         binding.txtDate.text = dateStr
-        Log.v("KEKW",dateStr)
 
         val duration = caminhada.getDuration()
-        val durationStr = if(duration.inWholeMinutes > 60){
+        val durationStr = if (duration.inWholeMinutes > 60) {
             val hours = duration.inWholeHours
-            val minutes = duration.inWholeMinutes - (hours*60)
+            val minutes = duration.inWholeMinutes - (hours * 60)
             "${hours} hora(s) e ${minutes} minuto(s)"
-        }else{
+        } else {
             "${duration.inWholeMinutes} minuto(s)"
         }
         binding.txtDuration.text = "Duração: ${durationStr}"

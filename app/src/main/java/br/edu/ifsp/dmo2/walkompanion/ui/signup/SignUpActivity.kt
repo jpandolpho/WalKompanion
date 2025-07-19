@@ -37,7 +37,11 @@ class SignUpActivity : AppCompatActivity() {
                             db.collection("users").document(email)
                                 .set(dados)
                                 .addOnSuccessListener {
-                                    Toast.makeText(this, "Cadastro realizado com sucesso.", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this,
+                                        "Cadastro realizado com sucesso.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                     finish()
                                 }
                         } else {
@@ -45,7 +49,7 @@ class SignUpActivity : AppCompatActivity() {
                         }
                     }
 
-            }else{
+            } else {
                 Toast.makeText(this, "Preencha os campos corretamente.", Toast.LENGTH_LONG).show()
             }
         }
