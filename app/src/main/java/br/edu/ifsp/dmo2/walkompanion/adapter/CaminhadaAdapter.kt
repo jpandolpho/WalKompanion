@@ -38,7 +38,13 @@ class CaminhadaAdapter(
         holder.binding.textDate.text = dateStr
 
         val duration = caminhadas[position].getDuration()
-        val durationStr = duration.inWholeMinutes.toString()
+        val durationStr = if(duration.inWholeMinutes > 60){
+            val hours = duration.inWholeHours
+            val minutes = duration.inWholeMinutes - (hours*60)
+            "${hours} hora(s) e ${minutes} minuto(s)"
+        }else{
+            "${duration.inWholeMinutes} minuto(s)"
+        }
         holder.binding.textTime.text = "Duração: ${durationStr}"
 
         holder.binding.textSteps.text = "Passos dados: ${caminhadas[position].getSteps()}"
